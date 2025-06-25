@@ -28,8 +28,8 @@ Installation
 
 Clone the repo:
 
-git clone https://github.com/your-org/your-repo.git
-cd your-repo
+git clone https://github.com/viktor-bd/CloudHuffer.git
+cd CloudHuffer
 
 Adjust configuration in appsettings.json or environment variables.
 
