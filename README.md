@@ -1,3 +1,39 @@
+# CloudHuffer Solution
+
+This solution contains three projects:
+
+- **CloudHufferApi**: ASP.NET Core Web API backend
+- **CloudHufferApi.Tests**: xUnit backend tests
+- **CloudHufferWeb**: Angular frontend (scaffolded with Angular CLI)
+
+## Structure
+
+- Backend code: `CloudHufferApi/`
+- Backend tests: `CloudHufferApi.Tests/`
+- Frontend code: `CloudHufferWeb/`
+
+## Getting Started
+
+1. Build and run the backend:
+   ```sh
+   dotnet build CloudHufferApi/CloudHufferApi.csproj
+   dotnet run --project CloudHufferApi/CloudHufferApi.csproj
+   ```
+2. Build and run the frontend:
+   ```sh
+   cd CloudHufferWeb
+   npm install
+   npm start
+   ```
+
+## Next Steps
+- Implement features in the appropriate folders (Controllers, Services, etc.)
+- Add tests in `CloudHufferApi.Tests`
+- Use the Angular app for the user interface
+
+---
+
+For more details, see the documentation and project board.
 # CloudHuffer
 A web application to parse Eve Online gas-huffing probe data and calculate optimal ISK/hour yields.
 Features
@@ -62,3 +98,4 @@ Push and open a PR.
 License
 
 This project is licensed under the GNU General Public License V3. See LICENSE for details.
+
