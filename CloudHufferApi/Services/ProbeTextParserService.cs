@@ -5,9 +5,9 @@ namespace CloudHufferApi.Services
 {
     public class ProbeTextParserService : IProbeTextParserService
     {
-        public List<ParsedCloudResult> Parse(string probeText)
+        public List<ParsedSiteResult> Parse(string probeText)
         {
-            var list = new List<ParsedCloudResult>();
+            var list = new List<ParsedSiteResult>();
             if (string.IsNullOrWhiteSpace(probeText)) return list;
             var lines = probeText.Split('\n');
             foreach (var line in lines)
@@ -30,7 +30,7 @@ namespace CloudHufferApi.Services
                 }
                 if (!string.IsNullOrWhiteSpace(sigId) && !string.IsNullOrWhiteSpace(siteName))
                 {
-                    list.Add(new ParsedCloudResult { SigId = sigId, CloudName = siteName });
+                    list.Add(new ParsedSiteResult { SigId = sigId, SiteName = siteName });
                 }
             }
             return list;

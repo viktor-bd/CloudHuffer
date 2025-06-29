@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CloudHufferApi.Services;
+using System.Collections.Generic;
 
 namespace CloudHufferApi.Controllers
 {
@@ -15,7 +16,7 @@ namespace CloudHufferApi.Controllers
         }
 
         [HttpPost("parse")]
-        public ActionResult<List<ParsedCloudResult>> Parse([FromBody] ProbeTextInput input)
+        public ActionResult<List<ParsedSiteResult>> Parse([FromBody] ProbeTextInput input)
         {
             if (string.IsNullOrWhiteSpace(input?.ProbeText))
                 return BadRequest("Probe text is required.");
@@ -27,6 +28,6 @@ namespace CloudHufferApi.Controllers
 
     public class ProbeTextInput
     {
-        public string ProbeText { get; set; }
+        public required string ProbeText { get; set; }
     }
 }

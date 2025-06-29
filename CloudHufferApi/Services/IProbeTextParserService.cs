@@ -3,16 +3,16 @@ namespace CloudHufferApi.Services
     public interface IProbeTextParserService
     {
         /// <summary>
-        /// Parses probe scanner text and extracts cloud names and signature IDs.
+        /// Parses probe scanner text and extracts site names and signature IDs.
         /// </summary>
         /// <param name="probeText">Raw text from the probe scanner.</param>
-        /// <returns>List of parsed clouds with sig IDs and names.</returns>
-        List<ParsedCloudResult> Parse(string probeText);
+        /// <returns>List of parsed sites with sig IDs and names.</returns>
+        List<ParsedSiteResult> Parse(string probeText);
     }
 
-    public class ParsedCloudResult
+    public class ParsedSiteResult
     {
-        public string SigId { get; set; }
-        public string CloudName { get; set; }
+        public required string SigId { get; set; }
+        public required string SiteName { get; set; }
     }
 }
