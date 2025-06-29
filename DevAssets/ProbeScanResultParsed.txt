@@ -1,0 +1,3 @@
+{
+  "probeText": "HTX-750\tCosmic Signature\t\t\t0,0%\t11,16 AU\nPBJ-525\tCosmic Signature\t\t\t0,0%\t15,45 AU\nHDZ-200\tCosmic Signature\t\t\t0,0%\t9,69 AU\nCHM-032\tCosmic Signature\t\t\t0,0%\t11,30 AU\nHHK-350\tCosmic Signature\t\t\t0,0%\t10,22 AU\nGNA-800\tCosmic Anomaly\tCombat Site\tOruze Osobnyk\t100,0%\t2,10 AU"
+}

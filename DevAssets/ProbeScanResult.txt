@@ -1,0 +1,33 @@
+HTX-750	Cosmic Signature			0,0%	11,16 AU
+PBJ-525	Cosmic Signature			0,0%	15,45 AU
+HDZ-200	Cosmic Signature			0,0%	9,69 AU
+CHM-032	Cosmic Signature			0,0%	11,30 AU
+HHK-350	Cosmic Signature			0,0%	10,22 AU
+GCX-866    Cosmic Signature    Gas Site    Ordinary Perimeter Reservoir    100.0%    7.67 AU
+VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4.38 AU
+GNA-800	Cosmic Anomaly	Combat Site	Oruze Osobnyk	100,0%	2,10 AU
+LFH-788	Cosmic Anomaly	Combat Site	Oruze Osobnyk	100,0%	11,46 AU
+SWM-438	Cosmic Anomaly	Ore Site	Ordinary Perimeter Deposit	100,0%	7,00 AU
+TLR-179	Cosmic Anomaly	Combat Site	Core Stronghold	100,0%	8,66 AU
+YSV-864	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	6,49 AU
+PES-108	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	8,26 AU
+LLK-625	Cosmic Anomaly	Ore Site	Ordinary Perimeter Deposit	100,0%	8,72 AU
+ZDL-240	Cosmic Anomaly	Ore Site	Exceptional Core Deposit	100,0%	12,86 AU
+QDZ-382	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	9,25 AU
+KEX-840	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	0,91 AU
+JHO-489	Cosmic Anomaly	Combat Site	Quarantine Area	100,0%	2,03 AU
+ONX-036	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	10,84 AU
+SPE-648	Cosmic Anomaly	Combat Site	Core Stronghold	100,0%	10,79 AU
+DTI-939	Cosmic Anomaly	Combat Site	Quarantine Area	100,0%	2,59 AU
+DTU-778	Cosmic Anomaly	Combat Site	Core Stronghold	100,0%	7,88 AU
+LIT-043	Cosmic Anomaly	Combat Site	Quarantine Area	100,0%	10,03 AU
+KTN-508	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	7,91 AU
+REX-467	Cosmic Anomaly	Ore Site	Ordinary Perimeter Deposit	100,0%	7,30 AU
+SOE-726	Cosmic Anomaly	Ore Site	Ordinary Perimeter Deposit	100,0%	1,15 AU
+KFJ-440	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	1,35 AU
+UKN-740	Cosmic Anomaly	Ore Site	Common Perimeter Deposit	100,0%	9,97 AU
+CNP-504	Cosmic Anomaly	Combat Site	Core Stronghold	100,0%	8,93 AU
+OSU-078	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	7,61 AU
+RIE-107	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	7,92 AU
+OVB-120	Cosmic Anomaly	Combat Site	Core Garrison	100,0%	25,04 AU
+ZAA-104	Cosmic Anomaly	Ore Site	Ordinary Perimeter Deposit	100,0%	7,56 AU
