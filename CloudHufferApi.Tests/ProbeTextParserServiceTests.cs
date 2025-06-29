@@ -16,7 +16,14 @@ namespace CloudHufferApi.Tests
         }
 
         [Fact]
-        public void Parse_ReturnsParsedClouds_WhenInputIsValid()
+        public void Parse_ParsesSingleRealLine()
+        {
+            var input = "GCX-866    Cosmic Signature    Gas Site    Ordinary Perimeter Reservoir    100.0%    7.67 AU";
+            var result = _service.Parse(input);
+            Assert.Single(result);
+            Assert.Equal("GCX-866", result[0].SigId);
+            Assert.Equal("Ordinary Perimeter Reservoir", result[0].SiteName);
+        }
         {
             var input = "ABC-123 SomeCloud\nDEF-456 AnotherCloud";
             var result = _service.Parse(input);
