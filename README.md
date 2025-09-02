@@ -1,5 +1,5 @@
 # CloudHuffer Solution
-
+NOTE: This is WIP - as of 2/9/2025 not yet at a release ready for use. Star the project for updates on releases.
 This solution contains three projects:
 
 - **CloudHufferApi**: ASP.NET Core Web API backend
