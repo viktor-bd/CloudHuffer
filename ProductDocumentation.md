@@ -166,6 +166,3 @@ For a hybrid C#/.NET + Angular + Docker project, you’ll typically want to igno
 
   - `.DS_Store` (macOS)
   - `Thumbs.db` (Windows)
-
-Feel free to tailor this list further based on any additional tools or generated files in your workflow.
-
