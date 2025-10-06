@@ -1,0 +1,174 @@
+.probe-parser-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.2em;
+}
+
+h2 {
+  color: #34495e;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.input-section {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.help-text {
+  color: #6c757d;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.input-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.sample-button, .clear-button {
+  padding: 8px 16px;
+  border: 1px solid #6c757d;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sample-button:hover, .clear-button:hover {
+  background: #e9ecef;
+}
+
+.probe-text-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 15px;
+}
+
+.probe-text-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.parse-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.parse-button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.parse-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+  margin-top: 15px;
+}
+
+.results-section {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1px;
+  background: #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.result-header {
+  background: #495057;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+}
+
+.result-row {
+  display: contents;
+}
+
+.sig-id, .site-name {
+  background: white;
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.sig-id {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: #495057;
+}
+
+.site-name {
+  color: #6c757d;
+}
+
+.site-name.gas-site {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.no-results {
+  text-align: center;
+  color: #6c757d;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .probe-parser-container {
+    padding: 15px;
+  }
+  
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .result-header:last-child {
+    display: none;
+  }
+  
+  .sig-id::after {
+    content: ": ";
+  }
+}

@@ -1,0 +1,56 @@
+<div class="probe-parser-container">
+  <h1>CloudHuffer - Eve Online Gas Huffing Analyzer</h1>
+  
+  <div class="input-section">
+    <h2>Probe Scanner Data</h2>
+    <p class="help-text">
+      Paste your probe scanner window text below. Copy the full signature list from your Eve Online probe scanner.
+    </p>
+    
+    <div class="input-controls">
+      <button type="button" (click)="loadSampleData()" class="sample-button">
+        Load Sample Data
+      </button>
+      <button type="button" (click)="onClear()" class="clear-button">
+        Clear
+      </button>
+    </div>
+    
+    <textarea 
+      [(ngModel)]="probeText"
+      placeholder="Paste your probe scanner text here..."
+      class="probe-text-input"
+      rows="10">
+    </textarea>
+    
+    <button 
+      (click)="onParseProbeText()" 
+      [disabled]="isLoading || !probeText.trim()"
+      class="parse-button">
+      {{ isLoading ? 'Parsing...' : 'Parse Probe Data' }}
+    </button>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+
+  <div *ngIf="results.length > 0" class="results-section">
+    <h2>Detected Sites</h2>
+    <div class="results-grid">
+      <div class="result-header">Signature ID</div>
+      <div class="result-header">Site Name</div>
+      
+      <div *ngFor="let result of results" class="result-row">
+        <div class="sig-id">{{ result.sigId }}</div>
+        <div class="site-name" [class.gas-site]="result.siteName !== 'Cosmic Signature'">
+          {{ result.siteName }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="results.length === 0 && !isLoading && probeText.trim()" class="no-results">
+    <p>No sites detected. Please check your probe scanner text format.</p>
+  </div>
+</div>
