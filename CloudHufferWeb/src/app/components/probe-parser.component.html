@@ -24,6 +24,30 @@
           Clear
         </button>
       </div>
+
+      <div class="filter-toggles">
+        <div class="toggle-group">
+          <label class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="filterNonGasSites"
+              (change)="onFilterChange()">
+            <span class="slider"></span>
+            <span class="toggle-label">Remove non gas signatures</span>
+          </label>
+        </div>
+        
+        <div class="toggle-group">
+          <label class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="allowUnscannedSites"
+              (change)="onFilterChange()">
+            <span class="slider"></span>
+            <span class="toggle-label">Allow unscanned signatures</span>
+          </label>
+        </div>
+      </div>
       
       <textarea 
         [(ngModel)]="probeText"
@@ -48,27 +72,31 @@
     <section class="sites-panel">
       <h2 class="section-title">Detected Sites</h2>
       
-      <div *ngIf="results.length > 0" class="sites-table">
+      <div *ngIf="filteredResults.length > 0" class="sites-table">
         <div class="table-header">
           <div class="col-sig">Signature ID</div>
           <div class="col-name">Site Name</div>
           <div class="col-type">Gas Type</div>
         </div>
         
-        <div *ngFor="let result of results" class="table-row">
+        <div *ngFor="let result of filteredResults" class="table-row">
           <div class="col-sig">{{ result.sigId }}</div>
-          <div class="col-name" [class.gas-site]="result.siteName !== 'Cosmic Signature'">
+          <div class="col-name" [class.gas-site]="isGasSite(result.siteName) && result.siteName !== 'Cosmic Signature'">
             {{ result.siteName }}
           </div>
           <div class="col-type">
-            <span *ngIf="result.siteName !== 'Cosmic Signature'" class="gas-type-indicator">Gas Site</span>
-            <span *ngIf="result.siteName === 'Cosmic Signature'" class="unknown-type">—</span>
+            <span 
+              [class.gas-type-indicator]="getSiteTypeDisplay(result.siteName) === 'Gas Site'"
+              [class.other-site-indicator]="getSiteTypeDisplay(result.siteName) === 'Other Site'"
+              [class.unknown-type]="getSiteTypeDisplay(result.siteName) === '—'">
+              {{ getSiteTypeDisplay(result.siteName) }}
+            </span>
           </div>
         </div>
       </div>
       
-      <div *ngIf="results.length === 0 && !isLoading" class="no-sites">
-        <div class="empty-state">No sites detected</div>
+      <div *ngIf="filteredResults.length === 0 && !isLoading" class="no-sites">
+        <div class="empty-state">No sites match current filters</div>
       </div>
     </section>
   </div>
