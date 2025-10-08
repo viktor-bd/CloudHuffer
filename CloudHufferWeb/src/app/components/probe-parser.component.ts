@@ -54,4 +54,14 @@ PBJ-525	Cosmic Signature			0,0%	15,45 AU
 GCX-866    Cosmic Signature    Gas Site    Ordinary Perimeter Reservoir    100.0%    7.67 AU
 VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4.38 AU`;
   }
+
+  getGasSites(): ParsedSiteResult[] {
+    return this.results.filter(result => result.siteName !== 'Cosmic Signature');
+  }
+
+  getRandomISK(): string {
+    // Placeholder for ISK calculation - will be replaced with real calculations
+    const iskValues = ['20.1', '24.8', '18.3', '32.1', '15.7'];
+    return iskValues[Math.floor(Math.random() * iskValues.length)];
+  }
 }
