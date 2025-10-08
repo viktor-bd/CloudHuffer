@@ -86,7 +86,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   padding: 20px;
-  height: 400px;
+  min-height: 400px;
 }
 
 /* Input Panel */
@@ -190,6 +190,79 @@
   font-size: 11px;
 }
 
+/* Filter Toggles */
+.filter-toggles {
+  margin: 15px 0;
+  padding: 12px;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.toggle-group {
+  margin-bottom: 8px;
+}
+
+.toggle-group:last-child {
+  margin-bottom: 0;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.slider {
+  position: relative;
+  width: 36px;
+  height: 18px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 9px;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #666;
+  border-radius: 50%;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.toggle-switch input:checked + .slider {
+  background: #00d4ff;
+  border-color: #0099cc;
+}
+
+.toggle-switch input:checked + .slider::before {
+  transform: translateX(18px);
+  background: #fff;
+}
+
+.toggle-label {
+  color: #ccc;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.toggle-switch:hover .toggle-label {
+  color: #00d4ff;
+}
+
 /* Sites Panel */
 .sites-panel {
   background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
@@ -284,6 +357,13 @@
 
 .gas-type-indicator {
   color: #44ff44;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.other-site-indicator {
+  color: #ff8844;
   font-size: 10px;
   text-transform: uppercase;
   font-weight: bold;
