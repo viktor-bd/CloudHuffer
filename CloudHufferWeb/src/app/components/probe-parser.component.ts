@@ -78,25 +78,36 @@ export class ProbeParserComponent implements OnInit {
     if (siteName === 'Cosmic Signature') {
       return '—';  // Unscanned, unknown type
     } else if (this.isGasSite(siteName)) {
-      // TODO: Replace with actual gas composition (C28, C32, C50, etc.) from GasCloudTable.md
-      // Should map site names like "Ordinary Perimeter Reservoir" → "C72"
-      return 'Gas Site';
+      const gasComposition = this.getGasComposition(siteName);
+      return gasComposition !== 'Unknown' ? gasComposition : 'Gas Site';
     } else {
       return 'Other Site';  // Combat, Ore, etc.
     }
   }
 
-  // Future method for gas composition mapping
-  // getGasComposition(siteName: string): string {
-  //   const gasMapping = {
-  //     'Ordinary Perimeter Reservoir': 'C72',
-  //     'Sizable Perimeter Reservoir': 'C84', 
-  //     'Bountiful Frontier Reservoir': 'C28',
-  //     'Vast Frontier Reservoir': 'C32',
-  //     // ... more mappings from GasCloudTable.md
-  //   };
-  //   return gasMapping[siteName] || 'Unknown';
-  // }
+  getGasComposition(siteName: string): string {
+    // Gas composition mapping from GasCloudTable.md
+    // Maps reservoir names to their primary gas type
+    const gasMapping: { [key: string]: string } = {
+      // Perimeter Reservoirs
+      'Ordinary Perimeter Reservoir': 'C72',
+      'Sizable Perimeter Reservoir': 'C84',
+      'Sizeable Perimeter Reservoir': 'C84',  // Handle British spelling variant
+      'Minor Perimeter Reservoir': 'C70',
+      'Token Perimeter Reservoir': 'C60',
+      'Barren Perimeter Reservoir': 'C50',
+      
+      // Frontier Reservoirs  
+      'Bountiful Frontier Reservoir': 'C28',
+      'Vast Frontier Reservoir': 'C32',
+      
+      // Core Reservoirs
+      'Instrumental Core Reservoir': 'C320',
+      'Vital Core Reservoir': 'C540'
+    };
+    
+    return gasMapping[siteName] || 'Unknown';
+  }
 
   private applyFilters(): void {
     let filtered = [...this.results];
