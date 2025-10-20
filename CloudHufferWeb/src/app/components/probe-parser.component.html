@@ -86,7 +86,7 @@
           </div>
           <div class="col-type">
             <span 
-              [class.gas-type-indicator]="getSiteTypeDisplay(result.siteName) === 'Gas Site'"
+              [class.gas-type-indicator]="isGasSite(result.siteName) && getSiteTypeDisplay(result.siteName) !== '—'"
               [class.other-site-indicator]="getSiteTypeDisplay(result.siteName) === 'Other Site'"
               [class.unknown-type]="getSiteTypeDisplay(result.siteName) === '—'">
               {{ getSiteTypeDisplay(result.siteName) }}
