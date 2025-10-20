@@ -87,26 +87,30 @@ export class ProbeParserComponent implements OnInit {
 
   getGasComposition(siteName: string): string {
     // Gas composition mapping from GasCloudTable.md
-    // Maps reservoir names to their primary gas type
-    const gasMapping: { [key: string]: string } = {
+    // Each site has both Large Cloud Gas and Small Cloud Gas
+    const gasMapping: { [key: string]: { large: string, small: string } } = {
       // Perimeter Reservoirs
-      'Ordinary Perimeter Reservoir': 'C72',
-      'Sizable Perimeter Reservoir': 'C84',
-      'Sizeable Perimeter Reservoir': 'C84',  // Handle British spelling variant
-      'Minor Perimeter Reservoir': 'C70',
-      'Token Perimeter Reservoir': 'C60',
-      'Barren Perimeter Reservoir': 'C50',
+      'Barren Perimeter Reservoir': { large: 'C50', small: 'C60' },
+      'Token Perimeter Reservoir': { large: 'C60', small: 'C70' },
+      'Minor Perimeter Reservoir': { large: 'C70', small: 'C72' },
+      'Ordinary Perimeter Reservoir': { large: 'C72', small: 'C84' },
+      'Sizable Perimeter Reservoir': { large: 'C84', small: 'C50' },
+      'Sizeable Perimeter Reservoir': { large: 'C84', small: 'C50' },  // Handle British spelling variant
       
       // Frontier Reservoirs  
-      'Bountiful Frontier Reservoir': 'C28',
-      'Vast Frontier Reservoir': 'C32',
+      'Bountiful Frontier Reservoir': { large: 'C28', small: 'C32' },
+      'Vast Frontier Reservoir': { large: 'C32', small: 'C28' },
       
       // Core Reservoirs
-      'Instrumental Core Reservoir': 'C320',
-      'Vital Core Reservoir': 'C540'
+      'Instrumental Core Reservoir': { large: 'C320', small: 'C540' },
+      'Vital Core Reservoir': { large: 'C540', small: 'C320' }
     };
     
-    return gasMapping[siteName] || 'Unknown';
+    const composition = gasMapping[siteName];
+    if (composition) {
+      return `${composition.large} + ${composition.small}`;
+    }
+    return 'Unknown';
   }
 
   private applyFilters(): void {
