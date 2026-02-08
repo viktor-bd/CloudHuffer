@@ -70,9 +70,19 @@
 
     <!-- Right Panel: Detected Sites -->
     <section class="sites-panel">
-      <h2 class="section-title">Detected Sites</h2>
+      <div class="sites-header">
+        <h2 class="section-title">Detected Sites</h2>
+        <div class="manual-controls">
+          <button type="button" (click)="addManualSite()" class="manual-btn">
+            Manual Add Site
+          </button>
+          <button type="button" class="manual-btn" disabled>
+            Manual Edit
+          </button>
+        </div>
+      </div>
       
-      <div *ngIf="filteredResults.length > 0" class="sites-table">
+      <div *ngIf="filteredResults.length > 0 || manualSites.length > 0" class="sites-table">
         <div class="table-header">
           <div class="col-sig">Signature ID</div>
           <div class="col-name">Site Name</div>
@@ -93,9 +103,43 @@
             </span>
           </div>
         </div>
+
+        <!-- Manual Sites -->
+        <div *ngFor="let manualSite of manualSites" class="table-row manual-row">
+          <div class="col-sig">
+            <input 
+              type="text" 
+              [(ngModel)]="manualSite.sigId"
+              placeholder="ABC-123"
+              class="manual-input sig-input">
+          </div>
+          <div class="col-name">
+            <select 
+              [(ngModel)]="manualSite.selectedReservoir"
+              (change)="updateManualSiteReservoir(manualSite.id, manualSite.selectedReservoir)"
+              class="manual-select reservoir-select">
+              <option value="">Select Reservoir...</option>
+              <option *ngFor="let reservoir of availableReservoirs" [value]="reservoir">
+                {{ reservoir }}
+              </option>
+            </select>
+          </div>
+          <div class="col-type">
+            <span *ngIf="manualSite.selectedReservoir" class="gas-type-indicator">
+              {{ getGasComposition(manualSite.selectedReservoir) }}
+            </span>
+            <button 
+              type="button" 
+              (click)="removeManualSite(manualSite.id)"
+              class="remove-btn"
+              title="Remove this manual site">
+              ×
+            </button>
+          </div>
+        </div>
       </div>
       
-      <div *ngIf="filteredResults.length === 0 && !isLoading" class="no-sites">
+      <div *ngIf="filteredResults.length === 0 && manualSites.length === 0 && !isLoading" class="no-sites">
         <div class="empty-state">No sites match current filters</div>
       </div>
     </section>
@@ -108,11 +152,17 @@
       <h3 class="panel-title">ISK per Hour</h3>
       <div class="isk-entries">
         <div class="isk-entry" *ngFor="let result of getGasSites()">
-          <div class="site-name-small">{{ result.siteName }}</div>
+          <div class="site-info">
+            <div class="site-name-small">{{ result.siteName }}</div>
+            <div class="site-details">
+              <span class="sig-id">{{ result.sigId }}</span>
+              <span class="gas-comp">{{ getGasComposition(result.siteName) }}</span>
+            </div>
+          </div>
           <div class="isk-amount">{{ getRandomISK() }}<span class="isk-unit">M ISK/h</span></div>
         </div>
         <div *ngIf="getGasSites().length === 0" class="no-data">
-          Parse probe data to see ISK estimates
+          Parse probe data or add manual sites to see ISK estimates
         </div>
       </div>
     </section>

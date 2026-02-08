@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProbeTextParserService } from '../services/probe-text-parser.service';
-import { ParsedSiteResult } from '../models/probe-parser.models';
+import { ParsedSiteResult, ManualSiteEntry } from '../models/probe-parser.models';
 
 @Component({
   selector: 'app-probe-parser',
@@ -22,10 +22,25 @@ export class ProbeParserComponent implements OnInit {
   filterNonGasSites = true;  // Default to showing only gas sites
   allowUnscannedSites = false;  // Default to hiding unscanned signatures
 
+  // Manual site management
+  manualSites: ManualSiteEntry[] = [];
+  availableReservoirs: string[] = [
+    'Barren Perimeter Reservoir',
+    'Token Perimeter Reservoir', 
+    'Minor Perimeter Reservoir',
+    'Ordinary Perimeter Reservoir',
+    'Sizable Perimeter Reservoir',
+    'Bountiful Frontier Reservoir',
+    'Vast Frontier Reservoir',
+    'Instrumental Core Reservoir',
+    'Vital Core Reservoir'
+  ];
+
   constructor(private probeTextParserService: ProbeTextParserService) {}
 
   ngOnInit(): void {
-    this.applyFilters();
+    // Initialize with empty filtered results
+    this.filteredResults = [];
   }
 
   onParseProbeText(): void {
@@ -34,12 +49,14 @@ export class ProbeParserComponent implements OnInit {
       return;
     }
 
+    console.log('Starting probe text parsing...', this.probeText);
     this.isLoading = true;
     this.errorMessage = '';
     this.results = [];
 
     this.probeTextParserService.parseProbeText(this.probeText).subscribe({
       next: (results) => {
+        console.log('API response received:', results);
         this.results = results;
         this.applyFilters();
         this.isLoading = false;
@@ -114,7 +131,7 @@ export class ProbeParserComponent implements OnInit {
   }
 
   private applyFilters(): void {
-    let filtered = [...this.results];
+    let filtered = [...(this.results || [])];
 
     // Filter non-gas sites if enabled
     if (this.filterNonGasSites) {
@@ -134,7 +151,29 @@ export class ProbeParserComponent implements OnInit {
     this.probeText = '';
     this.results = [];
     this.filteredResults = [];
+    this.manualSites = [];
     this.errorMessage = '';
+  }
+
+  addManualSite(): void {
+    const newSite: ManualSiteEntry = {
+      id: 'manual_' + Date.now(),
+      sigId: '',
+      selectedReservoir: '',
+      isEditing: true
+    };
+    this.manualSites.push(newSite);
+  }
+
+  updateManualSiteReservoir(siteId: string, reservoir: string): void {
+    const site = this.manualSites.find(s => s.id === siteId);
+    if (site) {
+      site.selectedReservoir = reservoir;
+    }
+  }
+
+  removeManualSite(siteId: string): void {
+    this.manualSites = this.manualSites.filter(s => s.id !== siteId);
   }
 
   loadSampleData(): void {
@@ -145,7 +184,19 @@ VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4
   }
 
   getGasSites(): ParsedSiteResult[] {
-    return this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
+    // Get filtered parsed sites (excluding unscanned signatures)
+    const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
+    
+    // Convert manual sites with selected reservoirs to ParsedSiteResult format
+    const manualGasSites = this.manualSites
+      .filter(manual => manual.selectedReservoir) // Only include sites with selected reservoir
+      .map(manual => ({
+        sigId: manual.sigId || 'Manual',
+        siteName: manual.selectedReservoir
+      }));
+    
+    // Combine both arrays
+    return [...parsedGasSites, ...manualGasSites];
   }
 
   getRandomISK(): string {
