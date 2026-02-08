@@ -18,7 +18,8 @@ jobs:
           dotnet build --no-restore --configuration Release
 
       - name: Run backend tests
-        run: dotnet test CloudHufferApi/CloudHufferApi.Tests/CloudHufferApi.Tests.csproj --no-build --verbosity normal
+        # The test project lives at CloudHufferApi.Tests/CloudHufferApi.Tests.csproj
+        run: dotnet test CloudHufferApi.Tests/CloudHufferApi.Tests.csproj --no-build --verbosity normal
 
       - name: Set up Node
         uses: actions/setup-node@v4
