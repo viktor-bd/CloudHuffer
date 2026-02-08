@@ -10,7 +10,8 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          # Tests target net9.0, use .NET 9 SDK in CI
+          dotnet-version: '9.0.x'
 
       - name: Restore and build backend
         run: |
@@ -18,8 +19,8 @@ jobs:
           dotnet build --no-restore --configuration Release
 
       - name: Run backend tests
-        # The test project lives at CloudHufferApi.Tests/CloudHufferApi.Tests.csproj
-        run: dotnet test CloudHufferApi.Tests/CloudHufferApi.Tests.csproj --no-build --verbosity normal
+        # Run tests (allow build by removing --no-build to avoid VSTest invocation issues)
+        run: dotnet test CloudHufferApi.Tests/CloudHufferApi.Tests.csproj --verbosity normal
 
       - name: Set up Node
         uses: actions/setup-node@v4
