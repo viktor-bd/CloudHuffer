@@ -1,0 +1,6 @@
+<div class="bookmark-selector">
+  <label for="bookmark">Select Bookmark</label>
+  <select id="bookmark" [(ngModel)]="selectedBookmark">
+    <option *ngFor="let bm of bookmarks" [value]="bm.id">{{ bm.name }}</option>
+  </select>
+</div>

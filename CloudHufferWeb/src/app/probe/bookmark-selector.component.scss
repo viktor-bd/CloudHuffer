@@ -1,0 +1,29 @@
+:root {
+  --primary: #3b82f6;
+  --bg: #f9fafb;
+  --border: #e5e7eb;
+  --radius: 0.5rem;
+  --spacing: 1rem;
+}
+
+:host {
+  display: block;
+}
+
+.bookmark-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  color: #333;
+}
+
+select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}

@@ -1,0 +1,76 @@
+:host {
+  display: block;
+}
+
+:root {
+  --primary: #3b82f6;
+  --bg: #f9fafb;
+  --bg-dark: #18181b;
+  --border: #e5e7eb;
+  --radius: 0.5rem;
+  --spacing: 1rem;
+}
+
+.probe-parser {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.probe-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.parse-btn {
+  padding: 0.5rem 1.5rem;
+  background: var(--bright-blue, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.parse-btn:disabled {
+  background: #b0b0b0;
+  cursor: not-allowed;
+}
+
+.results {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.result-card {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sig-id {
+  font-weight: bold;
+  color: #222;
+}
+
+.site-name {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+  .result-card {
+    background: var(--bg-dark);
+    color: #fff;
+  }
+}
