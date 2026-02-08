@@ -7,7 +7,9 @@ import { ParsedSiteResult, ProbeTextInput } from '../models/probe-parser.models'
   providedIn: 'root'
 })
 export class ProbeTextParserService {
-  private readonly apiUrl = 'http://localhost:5161/api/ProbeTextParser';
+  // Use a relative path so the Angular dev server can proxy to the backend
+  // via proxy.conf.json. This avoids hard-coded host/port and CORS issues.
+  private readonly apiUrl = '/api/ProbeTextParser';
 
   constructor(private http: HttpClient) {}
 

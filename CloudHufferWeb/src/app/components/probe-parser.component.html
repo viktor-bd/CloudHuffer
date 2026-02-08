@@ -159,7 +159,7 @@
               <span class="gas-comp">{{ getGasComposition(result.siteName) }}</span>
             </div>
           </div>
-          <div class="isk-amount">{{ getRandomISK() }}<span class="isk-unit">M ISK/h</span></div>
+          <div class="isk-amount">{{ getRandomISKFor(result.sigId) }}<span class="isk-unit">M ISK/h</span></div>
         </div>
         <div *ngIf="getGasSites().length === 0" class="no-data">
           Parse probe data or add manual sites to see ISK estimates

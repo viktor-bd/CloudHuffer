@@ -9,7 +9,7 @@ import { ParsedSiteResult, ManualSiteEntry } from '../models/probe-parser.models
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './probe-parser.component.html',
-  styleUrl: './probe-parser.component.css'
+  styleUrls: ['./probe-parser.component.css']
 })
 export class ProbeParserComponent implements OnInit {
   probeText = '';
@@ -41,7 +41,14 @@ export class ProbeParserComponent implements OnInit {
   ngOnInit(): void {
     // Initialize with empty filtered results
     this.filteredResults = [];
+    this.gasSites = [];
   }
+
+  // Cached combined gas sites (parsed + manual) to avoid recalculating in template
+  gasSites: ParsedSiteResult[] = [];
+
+  // Map of ISK values per signature id to keep values stable across change detection
+  private iskMap: Record<string, string> = {};
 
   onParseProbeText(): void {
     if (!this.probeText.trim()) {
@@ -59,6 +66,7 @@ export class ProbeParserComponent implements OnInit {
         console.log('API response received:', results);
         this.results = results;
         this.applyFilters();
+        this.computeGasSitesAndIsk();
         this.isLoading = false;
       },
       error: (error) => {
@@ -71,6 +79,7 @@ export class ProbeParserComponent implements OnInit {
 
   onFilterChange(): void {
     this.applyFilters();
+    this.computeGasSitesAndIsk();
   }
 
   isGasSite(siteName: string): boolean {
@@ -169,11 +178,13 @@ export class ProbeParserComponent implements OnInit {
     const site = this.manualSites.find(s => s.id === siteId);
     if (site) {
       site.selectedReservoir = reservoir;
+      this.computeGasSitesAndIsk();
     }
   }
 
   removeManualSite(siteId: string): void {
     this.manualSites = this.manualSites.filter(s => s.id !== siteId);
+    this.computeGasSitesAndIsk();
   }
 
   loadSampleData(): void {
@@ -184,24 +195,55 @@ VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4
   }
 
   getGasSites(): ParsedSiteResult[] {
-    // Get filtered parsed sites (excluding unscanned signatures)
-    const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
-    
-    // Convert manual sites with selected reservoirs to ParsedSiteResult format
-    const manualGasSites = this.manualSites
-      .filter(manual => manual.selectedReservoir) // Only include sites with selected reservoir
-      .map(manual => ({
-        sigId: manual.sigId || 'Manual',
-        siteName: manual.selectedReservoir
-      }));
-    
-    // Combine both arrays
-    return [...parsedGasSites, ...manualGasSites];
+    // Return cached combined list
+    return this.gasSites;
   }
 
   getRandomISK(): string {
-    // Placeholder for ISK calculation - will be replaced with real calculations
-    const iskValues = ['20.1', '24.8', '18.3', '32.1', '15.7'];
-    return iskValues[Math.floor(Math.random() * iskValues.length)];
+    // Deprecated - kept for compatibility
+    return '0.0';
+  }
+
+  // Stable ISK getter for a specific signature id
+  getRandomISKFor(sigId: string): string {
+    if (!sigId) {
+      return '0.0';
+    }
+    if (!this.iskMap[sigId]) {
+      const iskValues = ['20.1', '24.8', '18.3', '32.1', '15.7'];
+      this.iskMap[sigId] = iskValues[Math.floor(Math.random() * iskValues.length)];
+    }
+    return this.iskMap[sigId];
+  }
+
+  private computeGasSitesAndIsk(): void {
+    // Parsed gas sites (exclude unscanned signatures)
+    const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
+
+    // Manual sites mapped to ParsedSiteResult; ensure sigId is unique (use manual.id when sigId empty)
+    const manualGasSites = this.manualSites
+      .filter(manual => manual.selectedReservoir)
+      .map(manual => ({
+        sigId: manual.sigId && manual.sigId.trim().length > 0 ? manual.sigId : manual.id,
+        siteName: manual.selectedReservoir
+      }));
+
+    this.gasSites = [...parsedGasSites, ...manualGasSites];
+
+    // Ensure iskMap has entries for all current sites
+    for (const site of this.gasSites) {
+      if (!this.iskMap[site.sigId]) {
+        const iskValues = ['20.1', '24.8', '18.3', '32.1', '15.7'];
+        this.iskMap[site.sigId] = iskValues[Math.floor(Math.random() * iskValues.length)];
+      }
+    }
+
+    // Remove stale isk entries for removed sites
+    const validKeys = new Set(this.gasSites.map(s => s.sigId));
+    for (const key of Object.keys(this.iskMap)) {
+      if (!validKeys.has(key)) {
+        delete this.iskMap[key];
+      }
+    }
   }
 }
