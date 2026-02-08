@@ -4,10 +4,10 @@ import { AppComponent } from "./app.component";
 import { ProbeModule } from "./probe/probe.module";
 import { RouterModule } from '@angular/router';
 import { AppRoutes } from "./app.routes";
+import { provideRouter } from '@angular/router';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, ProbeModule, RouterModule.forRoot(AppRoutes)],
+  imports: [BrowserModule, ProbeModule, RouterModule.forRoot(AppRoutes), AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

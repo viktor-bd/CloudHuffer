@@ -5,8 +5,7 @@ import { ProbeParserComponent } from './probe-parser.component';
 import { BookmarkSelectorComponent } from './bookmark-selector.component';
 
 @NgModule({
-  declarations: [ProbeParserComponent, BookmarkSelectorComponent],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProbeParserComponent, BookmarkSelectorComponent],
   exports: [ProbeParserComponent, BookmarkSelectorComponent]
 })
 export class ProbeModule {}
