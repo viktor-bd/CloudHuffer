@@ -6,6 +6,12 @@
 # dotenv files
 .env
 
+# Local environment / secret files
+CloudHufferApi/appsettings*.json
+CloudHufferWeb/.env*
+*.local.json
+
+
 # User-specific files
 *.rsuser
 *.suo

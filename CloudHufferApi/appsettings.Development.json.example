@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=YOUR_SERVER;Database=YOUR_DB;User Id=USER;Password=PASSWORD;"
+  },
+  "SomeApiKey": "REPLACE_ME"
+}
