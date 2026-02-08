@@ -5,7 +5,6 @@ import { AppComponent } from "./app.component";
 // import { ProbeModule } from "./probe/probe.module";
 import { RouterModule } from '@angular/router';
 import { AppRoutes } from "./app.routes";
-import { provideRouter } from '@angular/router';
 
 @NgModule({
   imports: [BrowserModule, RouterModule.forRoot(AppRoutes), AppComponent],

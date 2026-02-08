@@ -60,6 +60,9 @@ export class ProbeParserComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.results = [];
+    this.filteredResults = [];
+    this.gasSites = [];
+    this.iskMap = {};
 
     this.probeTextParserService.parseProbeText(this.probeText).subscribe({
       next: (results) => {
@@ -162,6 +165,8 @@ export class ProbeParserComponent implements OnInit {
     this.filteredResults = [];
     this.manualSites = [];
     this.errorMessage = '';
+    this.gasSites = [];
+    this.iskMap = {};
   }
 
   addManualSite(): void {
