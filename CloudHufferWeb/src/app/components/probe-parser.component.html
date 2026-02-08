@@ -1,0 +1,220 @@
+<div class="eve-app">
+  <!-- Header with Navigation -->
+  <header class="app-header">
+    <div class="app-title">EVE GAS HUFFING OPTIMIZER</div>
+    <nav class="main-nav">
+      <button type="button" class="nav-tab active" aria-current="page">SCANNER</button>
+      <button type="button" class="nav-tab" disabled>DASHBOARD</button>
+      <button type="button" class="nav-tab" disabled>PROFILES</button>
+      <button type="button" class="nav-tab" disabled>SETTINGS</button>
+    </nav>
+    <button class="close-btn">✕</button>
+  </header>
+
+  <div class="main-content">
+    <!-- Left Panel: Probe Data Input -->
+    <section class="input-panel">
+      <h2 class="section-title">Paste Probe Data</h2>
+      
+      <div class="input-controls">
+        <button type="button" (click)="loadSampleData()" class="sample-btn">
+          Load Sample
+        </button>
+        <button type="button" (click)="onClear()" class="clear-btn">
+          Clear
+        </button>
+      </div>
+
+      <div class="filter-toggles">
+        <div class="toggle-group">
+          <label class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="filterNonGasSites"
+              (change)="onFilterChange()">
+            <span class="slider"></span>
+            <span class="toggle-label">Remove non gas signatures</span>
+          </label>
+        </div>
+        
+        <div class="toggle-group">
+          <label class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="allowUnscannedSites"
+              (change)="onFilterChange()">
+            <span class="slider"></span>
+            <span class="toggle-label">Allow unscanned signatures</span>
+          </label>
+        </div>
+      </div>
+      
+      <textarea 
+        [(ngModel)]="probeText"
+        placeholder="Paste your probe scanner data here..."
+        class="probe-input"
+        rows="8">
+      </textarea>
+      
+      <button 
+        (click)="onParseProbeText()" 
+        [disabled]="isLoading || !probeText.trim()"
+        class="parse-btn">
+        {{ isLoading ? 'Parsing...' : 'Parse Data' }}
+      </button>
+      
+      <div *ngIf="errorMessage" class="error-display">
+        {{ errorMessage }}
+      </div>
+    </section>
+
+    <!-- Right Panel: Detected Sites -->
+    <section class="sites-panel">
+      <div class="sites-header">
+        <h2 class="section-title">Detected Sites</h2>
+        <div class="manual-controls">
+          <button type="button" (click)="addManualSite()" class="manual-btn">
+            Manual Add Site
+          </button>
+          <button type="button" class="manual-btn" disabled>
+            Manual Edit
+          </button>
+        </div>
+      </div>
+      
+      <div *ngIf="filteredResults.length > 0 || manualSites.length > 0" class="sites-table">
+        <div class="table-header">
+          <div class="col-sig">Signature ID</div>
+          <div class="col-name">Site Name</div>
+          <div class="col-type">Gas Types</div>
+        </div>
+        
+        <div *ngFor="let result of filteredResults" class="table-row">
+          <div class="col-sig">{{ result.sigId }}</div>
+          <div class="col-name" [class.gas-site]="isGasSite(result.siteName) && result.siteName !== 'Cosmic Signature'">
+            {{ result.siteName }}
+          </div>
+          <div class="col-type">
+            <span 
+              [class.gas-type-indicator]="isGasSite(result.siteName) && getSiteTypeDisplay(result.siteName) !== '—'"
+              [class.other-site-indicator]="getSiteTypeDisplay(result.siteName) === 'Other Site'"
+              [class.unknown-type]="getSiteTypeDisplay(result.siteName) === '—'">
+              {{ getSiteTypeDisplay(result.siteName) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Manual Sites -->
+        <div *ngFor="let manualSite of manualSites" class="table-row manual-row">
+          <div class="col-sig">
+            <input 
+              type="text" 
+              [(ngModel)]="manualSite.sigId"
+              placeholder="ABC-123"
+              class="manual-input sig-input">
+          </div>
+          <div class="col-name">
+            <select 
+              [(ngModel)]="manualSite.selectedReservoir"
+              (change)="updateManualSiteReservoir(manualSite.id, manualSite.selectedReservoir)"
+              class="manual-select reservoir-select">
+              <option value="">Select Reservoir...</option>
+              <option *ngFor="let reservoir of availableReservoirs" [value]="reservoir">
+                {{ reservoir }}
+              </option>
+            </select>
+          </div>
+          <div class="col-type">
+            <span *ngIf="manualSite.selectedReservoir" class="gas-type-indicator">
+              {{ getGasComposition(manualSite.selectedReservoir) }}
+            </span>
+            <button 
+              type="button" 
+              (click)="removeManualSite(manualSite.id)"
+              class="remove-btn"
+              title="Remove this manual site">
+              ×
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="filteredResults.length === 0 && manualSites.length === 0 && !isLoading" class="no-sites">
+        <div class="empty-state">No sites match current filters</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bottom Panels: Dashboard Data -->
+  <div class="dashboard-panels">
+    <!-- ISK per Hour -->
+    <section class="isk-panel">
+      <h3 class="panel-title">ISK per Hour</h3>
+      <div class="isk-entries">
+        <div class="isk-entry" *ngFor="let result of getGasSites()">
+          <div class="site-info">
+            <div class="site-name-small">{{ result.siteName }}</div>
+            <div class="site-details">
+              <span class="sig-id">{{ result.sigId }}</span>
+              <span class="gas-comp">{{ getGasComposition(result.siteName) }}</span>
+            </div>
+          </div>
+          <div class="isk-amount">{{ getRandomISKFor(result.sigId) }}<span class="isk-unit">M ISK/h</span></div>
+        </div>
+        <div *ngIf="getGasSites().length === 0" class="no-data">
+          Parse probe data or add manual sites to see ISK estimates
+        </div>
+      </div>
+    </section>
+
+    <!-- Estimated Time to Clear -->
+    <section class="time-panel">
+      <h3 class="panel-title">Estimated Time to Clear</h3>
+      <div class="time-chart">
+        <div class="chart-placeholder">
+          <div class="chart-bar" style="height: 60%"></div>
+          <div class="chart-bar" style="height: 80%"></div>
+          <div class="chart-bar" style="height: 100%"></div>
+        </div>
+        <div class="time-estimate">24.8 <span class="time-unit">minutes</span></div>
+      </div>
+    </section>
+
+    <!-- Huffing Profiles -->
+    <section class="profile-panel">
+      <h3 class="panel-title">Huffing Profiles</h3>
+      <div class="profile-info">
+        <div class="character-name">Character 1</div>
+        
+        <div class="bonus-row">
+          <span class="bonus-label">Link Bonus</span>
+          <div class="bonus-bar">
+            <div class="bonus-fill" style="width: 75%"></div>
+          </div>
+          <span class="bonus-value">15%</span>
+        </div>
+        
+        <div class="bonus-row">
+          <span class="bonus-label">Module Bonus</span>
+          <div class="bonus-bar">
+            <div class="bonus-fill" style="width: 50%"></div>
+          </div>
+          <span class="bonus-value">10%</span>
+        </div>
+        
+        <div class="bonus-row">
+          <span class="bonus-label">Implant Bonus</span>
+          <div class="bonus-bar">
+            <div class="bonus-fill" style="width: 25%"></div>
+          </div>
+          <span class="bonus-value">5%</span>
+        </div>
+        
+        <div class="effective-rate">
+          <div class="rate-label">Effective Huff Rate</div>
+          <div class="rate-value">210.0 <span class="rate-unit">m³/min</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

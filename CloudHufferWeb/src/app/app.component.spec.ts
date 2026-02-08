@@ -1,10 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ProbeParserComponent } from './components/probe-parser.component';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, ProbeParserComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
   });
 
@@ -20,10 +24,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('CloudHufferWeb');
   });
 
-  it('should render title', () => {
+  it('should render probe parser component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, CloudHufferWeb');
+    expect(compiled.querySelector('app-probe-parser')).toBeTruthy();
   });
 });
