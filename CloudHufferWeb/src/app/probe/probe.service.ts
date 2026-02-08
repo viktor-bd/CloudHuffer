@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ParsedSiteResult } from '../models/probe-parser.models';
 
 export interface Bookmark {
   id: string;
@@ -23,7 +24,7 @@ export class ProbeService {
       return of({ success: true, results: [] });
     }
 
-    return this.http.post<any[]>('/api/probetextparser/parse', { probeText: text }).pipe(
+    return this.http.post<ParsedSiteResult[]>('/api/ProbeTextParser/parse', { probeText: text }).pipe(
       map(results => ({ success: true, results })),
       catchError(err => of({ success: false, error: err?.message || 'Request failed' }))
     );

@@ -36,8 +36,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Use CORS
-app.UseCors("AllowAngularDev");
+// Use CORS only in Development
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("AllowAngularDev");
+}
 
 app.MapControllers();
 
