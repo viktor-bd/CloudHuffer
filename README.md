@@ -99,3 +99,8 @@ License
 
 This project is licensed under the GNU General Public License V3. See LICENSE for details.
 
+CI notes:
+- The repository includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that currently runs the following (Option 1):
+  - Restores and builds the .NET backend and runs existing .NET tests
+  - Builds the Angular frontend using `npm ci` and `npm run build`
+- Future improvement (Option 2): add Angular unit tests (Karma/Jasmine) and run them in CI using a headless browser; this will provide richer frontend test coverage.
