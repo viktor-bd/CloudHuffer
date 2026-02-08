@@ -11,7 +11,8 @@ namespace CloudHufferApi.Tests
         [Fact]
         public void Parse_ReturnsEmptyList_WhenInputIsNullOrEmpty()
         {
-            Assert.Empty(_service.Parse(null));
+            // Use the null-forgiving operator to satisfy nullable reference checks in CI
+            Assert.Empty(_service.Parse(null!));
             Assert.Empty(_service.Parse(""));
         }
 
