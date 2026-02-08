@@ -1,9 +1,11 @@
 name: "CodeQL Analysis"
 on:
     push:
-        branches: [main]
+        branches: [main, master]
     pull_request:
-        branches: [main]
+        branches: [main, master]
+    # Allow manual runs from Actions UI
+    workflow_dispatch:
 
 jobs:
     analyze:
