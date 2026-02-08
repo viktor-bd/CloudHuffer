@@ -1,0 +1,207 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProbeTextParserService } from '../services/probe-text-parser.service';
+import { ParsedSiteResult, ManualSiteEntry } from '../models/probe-parser.models';
+
+@Component({
+  selector: 'app-probe-parser',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './probe-parser.component.html',
+  styleUrl: './probe-parser.component.css'
+})
+export class ProbeParserComponent implements OnInit {
+  probeText = '';
+  results: ParsedSiteResult[] = [];
+  filteredResults: ParsedSiteResult[] = [];
+  isLoading = false;
+  errorMessage = '';
+  
+  // Filter settings
+  filterNonGasSites = true;  // Default to showing only gas sites
+  allowUnscannedSites = false;  // Default to hiding unscanned signatures
+
+  // Manual site management
+  manualSites: ManualSiteEntry[] = [];
+  availableReservoirs: string[] = [
+    'Barren Perimeter Reservoir',
+    'Token Perimeter Reservoir', 
+    'Minor Perimeter Reservoir',
+    'Ordinary Perimeter Reservoir',
+    'Sizable Perimeter Reservoir',
+    'Bountiful Frontier Reservoir',
+    'Vast Frontier Reservoir',
+    'Instrumental Core Reservoir',
+    'Vital Core Reservoir'
+  ];
+
+  constructor(private probeTextParserService: ProbeTextParserService) {}
+
+  ngOnInit(): void {
+    // Initialize with empty filtered results
+    this.filteredResults = [];
+  }
+
+  onParseProbeText(): void {
+    if (!this.probeText.trim()) {
+      this.errorMessage = 'Please enter some probe scanner text';
+      return;
+    }
+
+    console.log('Starting probe text parsing...', this.probeText);
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.results = [];
+
+    this.probeTextParserService.parseProbeText(this.probeText).subscribe({
+      next: (results) => {
+        console.log('API response received:', results);
+        this.results = results;
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error parsing probe text:', error);
+        this.errorMessage = 'Failed to parse probe text. Please check the API connection.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onFilterChange(): void {
+    this.applyFilters();
+  }
+
+  isGasSite(siteName: string): boolean {
+    // Unscanned signatures (could be gas sites)
+    if (siteName === 'Cosmic Signature') {
+      return true;
+    }
+    
+    // Known gas site naming patterns in EVE Online
+    const gasSitePatterns = [
+      'Reservoir',    // Perimeter Reservoir, Core Reservoir, etc.
+      'Nebula',       // Various gas nebula types
+      'Ladar',        // Ladar site type
+      'Pocket',       // Some gas sites are called pockets
+      'Cloud'         // Gas cloud sites
+    ];
+    
+    return gasSitePatterns.some(pattern => siteName.includes(pattern));
+  }
+
+  getSiteTypeDisplay(siteName: string): string {
+    if (siteName === 'Cosmic Signature') {
+      return '—';  // Unscanned, unknown type
+    } else if (this.isGasSite(siteName)) {
+      const gasComposition = this.getGasComposition(siteName);
+      return gasComposition !== 'Unknown' ? gasComposition : 'Gas Site';
+    } else {
+      return 'Other Site';  // Combat, Ore, etc.
+    }
+  }
+
+  getGasComposition(siteName: string): string {
+    // Gas composition mapping from GasCloudTable.md
+    // Each site has both Large Cloud Gas and Small Cloud Gas
+    const gasMapping: { [key: string]: { large: string, small: string } } = {
+      // Perimeter Reservoirs
+      'Barren Perimeter Reservoir': { large: 'C50', small: 'C60' },
+      'Token Perimeter Reservoir': { large: 'C60', small: 'C70' },
+      'Minor Perimeter Reservoir': { large: 'C70', small: 'C72' },
+      'Ordinary Perimeter Reservoir': { large: 'C72', small: 'C84' },
+      'Sizable Perimeter Reservoir': { large: 'C84', small: 'C50' },
+      'Sizeable Perimeter Reservoir': { large: 'C84', small: 'C50' },  // Handle British spelling variant
+      
+      // Frontier Reservoirs  
+      'Bountiful Frontier Reservoir': { large: 'C28', small: 'C32' },
+      'Vast Frontier Reservoir': { large: 'C32', small: 'C28' },
+      
+      // Core Reservoirs
+      'Instrumental Core Reservoir': { large: 'C320', small: 'C540' },
+      'Vital Core Reservoir': { large: 'C540', small: 'C320' }
+    };
+    
+    const composition = gasMapping[siteName];
+    if (composition) {
+      return `${composition.large} + ${composition.small}`;
+    }
+    return 'Unknown';
+  }
+
+  private applyFilters(): void {
+    let filtered = [...(this.results || [])];
+
+    // Filter non-gas sites if enabled
+    if (this.filterNonGasSites) {
+      filtered = filtered.filter(result => this.isGasSite(result.siteName));
+    }
+
+    // Filter unscanned sites if not allowed
+    // Unscanned sites have siteName exactly equal to "Cosmic Signature"
+    if (!this.allowUnscannedSites) {
+      filtered = filtered.filter(result => result.siteName !== 'Cosmic Signature');
+    }
+
+    this.filteredResults = filtered;
+  }
+
+  onClear(): void {
+    this.probeText = '';
+    this.results = [];
+    this.filteredResults = [];
+    this.manualSites = [];
+    this.errorMessage = '';
+  }
+
+  addManualSite(): void {
+    const newSite: ManualSiteEntry = {
+      id: 'manual_' + Date.now(),
+      sigId: '',
+      selectedReservoir: '',
+      isEditing: true
+    };
+    this.manualSites.push(newSite);
+  }
+
+  updateManualSiteReservoir(siteId: string, reservoir: string): void {
+    const site = this.manualSites.find(s => s.id === siteId);
+    if (site) {
+      site.selectedReservoir = reservoir;
+    }
+  }
+
+  removeManualSite(siteId: string): void {
+    this.manualSites = this.manualSites.filter(s => s.id !== siteId);
+  }
+
+  loadSampleData(): void {
+    this.probeText = `HTX-750	Cosmic Signature			0,0%	11,16 AU
+PBJ-525	Cosmic Signature			0,0%	15,45 AU
+GCX-866    Cosmic Signature    Gas Site    Ordinary Perimeter Reservoir    100.0%    7.67 AU
+VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4.38 AU`;
+  }
+
+  getGasSites(): ParsedSiteResult[] {
+    // Get filtered parsed sites (excluding unscanned signatures)
+    const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
+    
+    // Convert manual sites with selected reservoirs to ParsedSiteResult format
+    const manualGasSites = this.manualSites
+      .filter(manual => manual.selectedReservoir) // Only include sites with selected reservoir
+      .map(manual => ({
+        sigId: manual.sigId || 'Manual',
+        siteName: manual.selectedReservoir
+      }));
+    
+    // Combine both arrays
+    return [...parsedGasSites, ...manualGasSites];
+  }
+
+  getRandomISK(): string {
+    // Placeholder for ISK calculation - will be replaced with real calculations
+    const iskValues = ['20.1', '24.8', '18.3', '32.1', '15.7'];
+    return iskValues[Math.floor(Math.random() * iskValues.length)];
+  }
+}
