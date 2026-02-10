@@ -27,10 +27,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Build frontend
+      - name: Build and test frontend
         run: |
           cd CloudHufferWeb
           npm ci
+          npm test --silent
           npm run build -- --configuration development
 
       - name: Echo success

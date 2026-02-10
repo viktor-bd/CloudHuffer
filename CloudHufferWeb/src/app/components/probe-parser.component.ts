@@ -8,7 +8,7 @@ import { ProfileManagerComponent } from '../profiles/profile-manager.component';
 @Component({
   selector: 'app-probe-parser',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProfileManagerComponent],
   templateUrl: './probe-parser.component.html',
   styleUrls: ['./probe-parser.component.css']
 })

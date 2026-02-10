@@ -10,13 +10,16 @@ import { Profile, CharacterProfile } from '../models/profile.models';
   imports: [CommonModule, FormsModule],
   template: `
   <div class="profile-manager">
-    <div class="profile-list">
-      <label>Profiles</label>
-      <select [(ngModel)]="selectedProfileId" (change)="onSelectProfile()">
-        <option [value]="null">-- None --</option>
-        <option *ngFor="let p of profiles" [value]="p.id">{{ p.name }}</option>
-      </select>
-      <div class="profile-actions">
+      <div class="profile-list">
+        <label>Profiles</label>
+        <select [(ngModel)]="selectedProfileId" (change)="onSelectProfile()">
+          <option [value]="null">-- None --</option>
+          <option *ngFor="let p of profiles" [value]="p.id">{{ p.name }}</option>
+        </select>
+        <div class="import-export">
+          <input type="file" (change)="onFileImport($event)" />
+        </div>
+        <div class="profile-actions">
         <input [(ngModel)]="newProfileName" placeholder="New profile name" />
         <button (click)="create()">Create</button>
         <button (click)="removeActive()" [disabled]="!activeProfile">Delete</button>
@@ -24,13 +27,14 @@ import { Profile, CharacterProfile } from '../models/profile.models';
       </div>
     </div>
 
-    <div *ngIf="activeProfile" class="profile-editor">
+      <div *ngIf="activeProfile" class="profile-editor">
       <h4>{{ activeProfile.name }}</h4>
-      <div *ngFor="let c of activeProfile.characters">
+      <div *ngFor="let c of activeProfile.characters; let i = index">
         <div class="char-row">
           <input [(ngModel)]="c.name" />
           <label>Base m³/min</label>
           <input type="number" [(ngModel)]="c.baseRateM3PerMin" />
+          <button (click)="removeCharacter(i)">Remove</button>
         </div>
         <div class="bonus-row">
           <label>Link %</label>
@@ -42,6 +46,7 @@ import { Profile, CharacterProfile } from '../models/profile.models';
         </div>
       </div>
       <div class="editor-actions">
+        <button (click)="addCharacter()">Add Character</button>
         <button (click)="save()">Save</button>
       </div>
       <div class="computed">
@@ -84,6 +89,30 @@ export class ProfileManagerComponent implements OnInit {
     this.reload();
   }
 
+  // allow adding/removing characters from profile
+  addCharacter(): void {
+    const p = this.profileService.getActive();
+    if (!p) return;
+    p.characters.push({
+      id: 'c_' + Date.now(),
+      name: 'Character ' + (p.characters.length + 1),
+      baseRateM3PerMin: 200,
+      linkBonusPct: 0,
+      moduleBonusPct: 0,
+      implantBonusPct: 0
+    });
+    this.profileService.update(p);
+    this.reload();
+  }
+
+  removeCharacter(index: number): void {
+    const p = this.profileService.getActive();
+    if (!p) return;
+    p.characters.splice(index, 1);
+    this.profileService.update(p);
+    this.reload();
+  }
+
   onSelectProfile(): void {
     this.profileService.setActive(this.selectedProfileId);
   }
@@ -113,6 +142,21 @@ export class ProfileManagerComponent implements OnInit {
     a.download = 'ch_profiles_export.json';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  onFileImport(evt: Event): void {
+    const input = evt.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      this.profileService.import(text);
+      this.reload();
+    };
+    reader.readAsText(file);
+    // clear input
+    input.value = '';
   }
 
   computeEffectiveRate(c: CharacterProfile): number {

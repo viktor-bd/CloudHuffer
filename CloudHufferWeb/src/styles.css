@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Profile manager tweaks */
+.profile-manager input[type="file"] {
+  background: #222;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.profile-manager .profile-actions input {
+  background: #222;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.profile-manager button {
+  background: linear-gradient(145deg, #333, #222);
+  color: #00d4ff;
+  border: 1px solid #555;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
