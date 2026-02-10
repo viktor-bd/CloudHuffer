@@ -1,0 +1,112 @@
+import { Injectable } from '@angular/core';
+import { Profile, CharacterProfile } from '../models/profile.models';
+
+const STORAGE_KEY = 'ch_profiles_v1';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProfileService {
+  private profiles: Profile[] = [];
+  private activeProfileId: string | null = null;
+
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  list(): Profile[] {
+    return [...this.profiles];
+  }
+
+  get(id: string): Profile | undefined {
+    return this.profiles.find(p => p.id === id);
+  }
+
+  create(name: string): Profile {
+    const now = new Date().toISOString();
+    const profile: Profile = {
+      id: 'p_' + Date.now(),
+      name,
+      characters: [this.makeDefaultCharacter()],
+      createdAt: now,
+      updatedAt: now
+    };
+    this.profiles.push(profile);
+    this.saveToStorage();
+    return profile;
+  }
+
+  update(profile: Profile): void {
+    const idx = this.profiles.findIndex(p => p.id === profile.id);
+    if (idx >= 0) {
+      profile.updatedAt = new Date().toISOString();
+      this.profiles[idx] = profile;
+      this.saveToStorage();
+    }
+  }
+
+  delete(id: string): void {
+    this.profiles = this.profiles.filter(p => p.id !== id);
+    if (this.activeProfileId === id) this.activeProfileId = null;
+    this.saveToStorage();
+  }
+
+  setActive(id: string | null): void {
+    this.activeProfileId = id;
+    this.saveToStorage();
+  }
+
+  getActive(): Profile | null {
+    if (!this.activeProfileId) return null;
+    return this.get(this.activeProfileId) || null;
+  }
+
+  import(json: string): Profile[] {
+    try {
+      const parsed = JSON.parse(json) as Profile[];
+      // Basic validation: ensure array and id/name
+      if (!Array.isArray(parsed)) return [];
+      for (const p of parsed) {
+        if (!p.id || !p.name) continue;
+        this.profiles.push(p);
+      }
+      this.saveToStorage();
+      return this.list();
+    } catch {
+      return [];
+    }
+  }
+
+  export(): string {
+    return JSON.stringify(this.profiles, null, 2);
+  }
+
+  private makeDefaultCharacter(): CharacterProfile {
+    return {
+      id: 'c_' + Date.now(),
+      name: 'Character 1',
+      baseRateM3PerMin: 200,
+      linkBonusPct: 15,
+      moduleBonusPct: 10,
+      implantBonusPct: 5
+    };
+  }
+
+  private loadFromStorage(): void {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { profiles?: Profile[]; activeProfileId?: string };
+      this.profiles = parsed.profiles || [];
+      this.activeProfileId = parsed.activeProfileId || null;
+    } catch {
+      this.profiles = [];
+      this.activeProfileId = null;
+    }
+  }
+
+  private saveToStorage(): void {
+    const payload = { profiles: this.profiles, activeProfileId: this.activeProfileId };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  }
+}

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProbeTextParserService } from '../services/probe-text-parser.service';
 import { ParsedSiteResult, ManualSiteEntry } from '../models/probe-parser.models';
+import { ProfileManagerComponent } from '../profiles/profile-manager.component';
 
 @Component({
   selector: 'app-probe-parser',
@@ -46,6 +47,7 @@ export class ProbeParserComponent implements OnInit {
 
   // Cached combined gas sites (parsed + manual) to avoid recalculating in template
   gasSites: ParsedSiteResult[] = [];
+
 
   // Map of ISK values per signature id to keep values stable across change detection
   private iskMap: Record<string, string> = {};
