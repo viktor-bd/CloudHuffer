@@ -133,6 +133,7 @@ export class ProfileManagerComponent implements OnInit {
       id: 'c_' + Date.now(),
       name: 'Character ' + (p.characters.length + 1),
       baseRateM3PerSec: 3.3333333,
+      // set bonuses to zero explicitly; advanced mode will read these when toggled on
       linkBonusPct: 0,
       moduleBonusPct: 0,
       implantBonusPct: 0
@@ -151,6 +152,8 @@ export class ProfileManagerComponent implements OnInit {
 
   onSelectProfile(): void {
     this.profileService.setActive(this.selectedProfileId);
+    // when switching profiles, ensure simple/advanced state does not implicitly apply hidden bonuses
+    // if advanced is off, we will ignore any bonus fields in computation (handled in computeEffectiveRate)
   }
 
   save(): void {
@@ -202,6 +205,11 @@ export class ProfileManagerComponent implements OnInit {
   }
 
   computeEffectiveRate(c: CharacterProfile): number {
+    // If not in advanced mode, bonuses should be ignored — simple mode uses the base rate directly.
+    if (!this.advancedMode) {
+      return c.baseRateM3PerSec;
+    }
+
     const totalPct = (c.linkBonusPct + c.moduleBonusPct + c.implantBonusPct) / 100.0;
     return c.baseRateM3PerSec * (1 + totalPct);
   }
