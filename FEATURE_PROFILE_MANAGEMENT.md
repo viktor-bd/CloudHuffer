@@ -43,27 +43,28 @@ Notes on decisions
 - Increased component style budget in `angular.json` from default to allow current CSS size; we can revisit by trimming CSS or splitting styles.
 
 Next steps (pickable items)
-1. Polish UI
-   - Improve layout, icons, and better theming for the profile manager.
-   - Make the import control visually consistent with theme (minor styling already added in `src/styles.css`).
-2. Tests & CI improvements
-   - Add component-level unit tests for `ProfileManagerComponent` and more negative tests for import validation.
-   - Add E2E tests if desired.
-3. Server-side persistence (design & incremental rollout)
-   - Proposed API endpoints (requires authentication & ownership):
-     - GET `/api/profiles` — list profiles for the current user
-     - POST `/api/profiles` — create profile
-     - PUT `/api/profiles/{id}` — update profile
-     - DELETE `/api/profiles/{id}` — delete profile
-     - POST `/api/profiles/import` — bulk import
-   - Migration approach:
-     1. Keep client localStorage fallback.
-     2. When the user authenticates, offer an explicit import/merge of local profiles to the server (user action avoids accidental overwrite).
-     3. Provide a simple sync strategy (merge by `updatedAt`, allow user to choose on conflicts).
-   - Implementation plan: add DTOs + controller to `CloudHufferApi`, protect endpoints, then add client calls in `ProfileService` behind a feature flag.
-4. Deployment considerations
-   - If hosting static site separately from API, continue localStorage-first and enable sync for logged-in users.
-   - If serving static files from the API host, add server endpoints to `CloudHufferApi` and choose auth strategy (cookie or JWT). Prefer JWT for SPA + API separation.
+
+The acceptance criteria are m³/s. The following recommended next steps remain to finish polish and prepare the feature for merge. These are recommendations only — they have NOT been implemented on the branch.
+
+1. Add compute unit tests for both modes (recommended, 30–45m)
+   - Add unit tests that assert `computeEffectiveRate` returns expected values in both simple and advanced modes.
+   - Extend `CloudHufferWeb/src/app/components/profile-manager.component.spec.ts` or add a small dedicated spec for the computation.
+
+2. UX validation for manual sites (small, 15–30m)
+   - Add inline validation messaging or visual state (highlight) when a manual site is incomplete (missing Sig ID or reservoir). Update `probe-parser.component.html` and CSS accordingly.
+
+3. Additional component tests and CI assertions (medium, 1–2 hours)
+   - Add tests for advanced toggle behavior, import/export flows, and manual site validation.
+   - Ensure CI runs these tests non-interactively (the pipeline was updated to run tests; add any new tests to the same suite).
+
+4. Server-side sync skeleton (optional, design 1–2 hrs)
+   - Draft API DTOs and controller stubs in `CloudHufferApi` for profile CRUD (no persistent storage required in initial skeleton).
+   - Plan a migration and merge strategy for client local profiles to server profiles when user authenticates.
+
+5. PR checklist & final polish before merge (small, 15–30m)
+   - Run full production build and tests: `cd CloudHufferWeb && npm ci && npm test && npm run build`.
+   - Add component-level tests for coverage and update docs where needed.
+   - Prepare PR description and reviewers.
 
 Notes about this branch
 - No merges were performed into other branches. The branch was pushed to `origin/feature/profile-management`.

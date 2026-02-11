@@ -29,4 +29,34 @@ describe('ProfileManagerComponent', () => {
     expect(active).toBeTruthy();
     expect(active!.name).toBe('SpecProfile');
   });
+
+  it('computeEffectiveRate returns base rate in simple mode (ignores bonuses)', () => {
+    // ensure simple mode
+    component.advancedMode = false;
+    const c: any = {
+      id: 't_simple',
+      name: 'SimpleChar',
+      baseRateM3PerSec: 2.5,
+      linkBonusPct: 100,
+      moduleBonusPct: 50,
+      implantBonusPct: 25
+    };
+    const result = component.computeEffectiveRate(c);
+    expect(result).toBeCloseTo(2.5, 6);
+  });
+
+  it('computeEffectiveRate applies bonuses in advanced mode', () => {
+    component.advancedMode = true;
+    const c: any = {
+      id: 't_adv',
+      name: 'AdvChar',
+      baseRateM3PerSec: 2.0,
+      linkBonusPct: 10,
+      moduleBonusPct: 5,
+      implantBonusPct: 0
+    };
+    // total bonus = 15% -> expected = 2.0 * 1.15 = 2.3
+    const result = component.computeEffectiveRate(c);
+    expect(result).toBeCloseTo(2.3, 6);
+  });
 });
