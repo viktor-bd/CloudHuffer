@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProbeTextParserService } from '../services/probe-text-parser.service';
 import { ParsedSiteResult, ManualSiteEntry } from '../models/probe-parser.models';
+import { ProfileManagerComponent } from '../profiles/profile-manager.component';
 
 @Component({
   selector: 'app-probe-parser',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProfileManagerComponent],
   templateUrl: './probe-parser.component.html',
   styleUrls: ['./probe-parser.component.css']
 })
@@ -46,6 +47,7 @@ export class ProbeParserComponent implements OnInit {
 
   // Cached combined gas sites (parsed + manual) to avoid recalculating in template
   gasSites: ParsedSiteResult[] = [];
+
 
   // Map of ISK values per signature id to keep values stable across change detection
   private iskMap: Record<string, string> = {};
@@ -226,10 +228,11 @@ VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4
     const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
 
     // Manual sites mapped to ParsedSiteResult; ensure sigId is unique (use manual.id when sigId empty)
+    // Only include manual sites that have both a sigId and a selected reservoir
     const manualGasSites = this.manualSites
-      .filter(manual => manual.selectedReservoir)
+      .filter(manual => manual.selectedReservoir && manual.sigId && manual.sigId.trim().length > 0)
       .map(manual => ({
-        sigId: manual.sigId && manual.sigId.trim().length > 0 ? manual.sigId : manual.id,
+        sigId: manual.sigId.trim(),
         siteName: manual.selectedReservoir
       }));
 

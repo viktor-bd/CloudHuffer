@@ -44,7 +44,7 @@ Manual cloud selection from bookmarks
 
 Real‑time gas composition, volume, and ISK/m³ data
 
-Time‑to‑clear estimates based on customizable m³/min huff rates
+Time‑to‑clear estimates based on customizable m³/s huff rates
 
 Multi‑character profiles with module, implant, and link bonuses
 

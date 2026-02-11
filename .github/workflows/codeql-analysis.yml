@@ -18,5 +18,13 @@ jobs:
               uses: github/codeql-action/init@v3
               with:
                 languages: javascript, csharp
+            - name: Set up .NET SDK
+              uses: actions/setup-dotnet@v3
+              with:
+                dotnet-version: '9.0.x'
+            - name: Restore and build .NET solution
+              run: |
+                dotnet restore
+                dotnet build --configuration Release
             - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3
