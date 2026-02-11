@@ -228,10 +228,11 @@ VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4
     const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
 
     // Manual sites mapped to ParsedSiteResult; ensure sigId is unique (use manual.id when sigId empty)
+    // Only include manual sites that have both a sigId and a selected reservoir
     const manualGasSites = this.manualSites
-      .filter(manual => manual.selectedReservoir)
+      .filter(manual => manual.selectedReservoir && manual.sigId && manual.sigId.trim().length > 0)
       .map(manual => ({
-        sigId: manual.sigId && manual.sigId.trim().length > 0 ? manual.sigId : manual.id,
+        sigId: manual.sigId.trim(),
         siteName: manual.selectedReservoir
       }));
 

@@ -86,9 +86,10 @@ export class ProfileService {
       id: 'c_' + Date.now(),
       name: 'Character 1',
       baseRateM3PerMin: 200,
-      linkBonusPct: 15,
-      moduleBonusPct: 10,
-      implantBonusPct: 5
+      // default to zeros to align with simple mode being the default
+      linkBonusPct: 0,
+      moduleBonusPct: 0,
+      implantBonusPct: 0
     };
   }
 

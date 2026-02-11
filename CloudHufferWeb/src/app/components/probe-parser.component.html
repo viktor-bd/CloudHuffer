@@ -125,7 +125,7 @@
             </select>
           </div>
           <div class="col-type">
-            <span *ngIf="manualSite.selectedReservoir" class="gas-type-indicator">
+            <span *ngIf="manualSite.selectedReservoir && manualSite.sigId" class="gas-type-indicator">
               {{ getGasComposition(manualSite.selectedReservoir) }}
             </span>
             <button 

@@ -31,34 +31,55 @@ import { Profile, CharacterProfile } from '../models/profile.models';
           <input type="file" (change)="onFileImport($event)" />
         </div>
         <div class="profile-actions">
-        <input [(ngModel)]="newProfileName" placeholder="New profile name" />
-        <button (click)="create()">Create</button>
-        <button (click)="removeActive()" [disabled]="!activeProfile">Delete</button>
-        <button (click)="export()">Export</button>
+          <input [(ngModel)]="newProfileName" placeholder="New profile name" />
+          <button (click)="create()">Create</button>
+          <button (click)="removeActive()" [disabled]="!activeProfile">Delete</button>
+          <button (click)="export()">Export</button>
+          <label class="mode-toggle">
+            <input type="checkbox" [(ngModel)]="advancedMode" /> Advanced
+          </label>
+        </div>
       </div>
-    </div>
 
       <div *ngIf="activeProfile" class="profile-editor">
       <h4>{{ activeProfile.name }}</h4>
-      <div *ngFor="let c of activeProfile.characters; let i = index">
-        <div class="char-row">
+
+      <!-- Simple mode: single numeric input per character (user-entered rate) -->
+      <div *ngIf="!advancedMode">
+        <div *ngFor="let c of activeProfile.characters; let i = index" class="char-row">
           <input [(ngModel)]="c.name" />
-          <label>Base m³/min</label>
+          <label>Rate (m³/min)</label>
           <input type="number" [(ngModel)]="c.baseRateM3PerMin" />
           <button (click)="removeCharacter(i)">Remove</button>
         </div>
-        <div class="bonus-row">
-          <label>Link %</label>
-          <input type="number" [(ngModel)]="c.linkBonusPct" />
-          <label>Module %</label>
-          <input type="number" [(ngModel)]="c.moduleBonusPct" />
-          <label>Implant %</label>
-          <input type="number" [(ngModel)]="c.implantBonusPct" />
+        <div class="editor-actions">
+          <button (click)="addCharacter()">Add Character</button>
+          <button (click)="save()">Save</button>
         </div>
       </div>
-      <div class="editor-actions">
-        <button (click)="addCharacter()">Add Character</button>
-        <button (click)="save()">Save</button>
+
+      <!-- Advanced mode: detailed bonus breakdown -->
+      <div *ngIf="advancedMode">
+        <div *ngFor="let c of activeProfile.characters; let i = index">
+          <div class="char-row">
+            <input [(ngModel)]="c.name" />
+            <label>Base m³/min</label>
+            <input type="number" [(ngModel)]="c.baseRateM3PerMin" />
+            <button (click)="removeCharacter(i)">Remove</button>
+          </div>
+          <div class="bonus-row">
+            <label>Link %</label>
+            <input type="number" [(ngModel)]="c.linkBonusPct" />
+            <label>Module %</label>
+            <input type="number" [(ngModel)]="c.moduleBonusPct" />
+            <label>Implant %</label>
+            <input type="number" [(ngModel)]="c.implantBonusPct" />
+          </div>
+        </div>
+        <div class="editor-actions">
+          <button (click)="addCharacter()">Add Character</button>
+          <button (click)="save()">Save</button>
+        </div>
       </div>
       <div class="computed">
         <label>Effective rate:</label>
@@ -82,11 +103,15 @@ export class ProfileManagerComponent implements OnInit {
     this.reload();
     const active = this.profileService.getActive();
     this.selectedProfileId = active ? active.id : null;
+    // default to simple mode (advanced toggled off)
+    this.advancedMode = false;
   }
 
   get activeProfile(): Profile | null {
     return this.profileService.getActive();
   }
+
+  advancedMode = false;
 
   reload(): void {
     this.profiles = this.profileService.list();
@@ -153,6 +178,12 @@ export class ProfileManagerComponent implements OnInit {
     a.download = 'ch_profiles_export.json';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  // allow exporting JSON string to clipboard as well (convenience)
+  exportToClipboard(): void {
+    const text = this.profileService.export();
+    navigator.clipboard?.writeText(text).catch(() => {});
   }
 
   onFileImport(evt: Event): void {
