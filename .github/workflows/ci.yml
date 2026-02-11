@@ -31,7 +31,7 @@ jobs:
         run: |
           cd CloudHufferWeb
           npm ci
-          npm test -- --watch=false --silent
+          npm test -- --watch=false
           npm run build -- --configuration production
 
       - name: Echo success
