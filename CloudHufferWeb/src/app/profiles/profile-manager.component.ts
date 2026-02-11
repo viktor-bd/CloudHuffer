@@ -8,6 +8,17 @@ import { Profile, CharacterProfile } from '../models/profile.models';
   selector: 'app-profile-manager',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styles: [
+    `.profile-manager { display:block; gap:10px; }
+     .profile-list { display:flex; flex-direction:column; gap:8px; }
+     .profile-actions { display:flex; align-items:center; gap:6px; }
+     .profile-editor { margin-top:12px; }
+     .char-row { display:flex; align-items:center; gap:8px; margin-bottom:6px }
+     .char-row input[type=number]{ width:90px }
+     .import-export input { color: #ccc }
+     button { cursor:pointer }
+    `
+  ],
   template: `
   <div class="profile-manager">
       <div class="profile-list">

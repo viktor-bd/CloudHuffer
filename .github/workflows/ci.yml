@@ -31,8 +31,8 @@ jobs:
         run: |
           cd CloudHufferWeb
           npm ci
-          npm test --silent
-          npm run build -- --configuration development
+          npm test -- --watch=false --silent
+          npm run build -- --configuration production
 
       - name: Echo success
         run: echo "CI build and tests completed"
