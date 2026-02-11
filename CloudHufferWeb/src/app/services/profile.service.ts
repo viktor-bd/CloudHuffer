@@ -85,7 +85,7 @@ export class ProfileService {
     return {
       id: 'c_' + Date.now(),
       name: 'Character 1',
-      baseRateM3PerMin: 200,
+      baseRateM3PerSec: 3.3333333, // ~200 m3/min as m3/s
       // default to zeros to align with simple mode being the default
       linkBonusPct: 0,
       moduleBonusPct: 0,

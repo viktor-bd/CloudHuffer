@@ -8,7 +8,7 @@ What I implemented
 - Branch: `feature/profile-management` (pushed to origin)
 - Front-end MVP: profile management implemented in the Angular web app, persisted to browser `localStorage`.
 - Import/export: JSON export and file import are supported.
-- Profile model: supports multiple characters per profile with base m³/min and bonuses (link/module/implant %).
+- Profile model: supports multiple characters per profile with base m³/s and bonuses (link/module/implant %).
 
 Files added
 - `CloudHufferWeb/src/app/models/profile.models.ts`

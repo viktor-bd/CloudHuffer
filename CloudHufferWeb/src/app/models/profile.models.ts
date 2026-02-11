@@ -1,7 +1,7 @@
 export interface CharacterProfile {
   id: string;
   name: string;
-  baseRateM3PerMin: number; // e.g. 200
+  baseRateM3PerSec: number; // e.g. 3.33 (m³/s)
   linkBonusPct: number; // percent, e.g. 15 means 15%
   moduleBonusPct: number;
   implantBonusPct: number;

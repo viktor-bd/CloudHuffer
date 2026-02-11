@@ -48,8 +48,8 @@ import { Profile, CharacterProfile } from '../models/profile.models';
       <div *ngIf="!advancedMode">
         <div *ngFor="let c of activeProfile.characters; let i = index" class="char-row">
           <input [(ngModel)]="c.name" />
-          <label>Rate (m³/min)</label>
-          <input type="number" [(ngModel)]="c.baseRateM3PerMin" />
+          <label>Rate (m³/s)</label>
+          <input type="number" step="0.001" [(ngModel)]="c.baseRateM3PerSec" />
           <button (click)="removeCharacter(i)">Remove</button>
         </div>
         <div class="editor-actions">
@@ -63,8 +63,8 @@ import { Profile, CharacterProfile } from '../models/profile.models';
         <div *ngFor="let c of activeProfile.characters; let i = index">
           <div class="char-row">
             <input [(ngModel)]="c.name" />
-            <label>Base m³/min</label>
-            <input type="number" [(ngModel)]="c.baseRateM3PerMin" />
+            <label>Base m³/s</label>
+            <input type="number" step="0.001" [(ngModel)]="c.baseRateM3PerSec" />
             <button (click)="removeCharacter(i)">Remove</button>
           </div>
           <div class="bonus-row">
@@ -85,7 +85,7 @@ import { Profile, CharacterProfile } from '../models/profile.models';
         <label>Effective rate:</label>
         <div *ngFor="let c of activeProfile.characters">
           <strong>{{ c.name }}:</strong>
-          {{ computeEffectiveRate(c) | number:'1.1-1' }} m³/min
+          {{ computeEffectiveRate(c) | number:'1.3-3' }} m³/s
         </div>
       </div>
     </div>
@@ -132,7 +132,7 @@ export class ProfileManagerComponent implements OnInit {
     p.characters.push({
       id: 'c_' + Date.now(),
       name: 'Character ' + (p.characters.length + 1),
-      baseRateM3PerMin: 200,
+      baseRateM3PerSec: 3.3333333,
       linkBonusPct: 0,
       moduleBonusPct: 0,
       implantBonusPct: 0
@@ -203,6 +203,6 @@ export class ProfileManagerComponent implements OnInit {
 
   computeEffectiveRate(c: CharacterProfile): number {
     const totalPct = (c.linkBonusPct + c.moduleBonusPct + c.implantBonusPct) / 100.0;
-    return c.baseRateM3PerMin * (1 + totalPct);
+    return c.baseRateM3PerSec * (1 + totalPct);
   }
 }

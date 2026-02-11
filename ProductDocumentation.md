@@ -17,7 +17,7 @@
 3. **User Stories**
 
    - *As a user, I want to paste my probe scanner text so that the app auto-detects clouds.*
-   - *As a user, I want to set my huff rate (m³/min) so that time estimates are accurate.*
+    - *As a user, I want to set my huff rate (m³/s) so that time estimates are accurate.*
    - *As a corp admin, I want to cache gas price data and import via ESI later.*
 
 4. **Core Features**
@@ -25,7 +25,7 @@
    - **Probe-Text Parsing**: NLP to extract cloud names & sig IDs from pasted scan text.
    - **Manual Selection Mode**: Dropdowns of bookmarked sites if no scan text.
    - **Yield Dashboard**: For each cloud, show gas types, volumes, current ISK value, and “time to clear.”
-   - **Profile Management**: Multi-character, module/implant/link config to compute net m³/min.
+    - **Profile Management**: Multi-character, module/implant/link config to compute net m³/s.
    - **Data Caching & Refresh**: SQL Server cache of gas compositions and ISK prices; scheduled updates.
 
 5. **Data Model & Caching Strategy**
@@ -112,7 +112,7 @@ graph LR
 10. **Glossary & Terms**
 
 - **Gas-Huffing**: NPC activity of extracting gas clouds using specialized modules.
-- **m³/min**: Volume per minute, the throughput metric.
+- **m³/s**: Volume per second, the throughput metric.
 - **Links**: Fleet-wide boosts to huff rates.
 - **ESI**: Eve Swagger Interface, CCP’s OAuth-protected REST API.
 
