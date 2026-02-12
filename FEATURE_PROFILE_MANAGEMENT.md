@@ -44,11 +44,10 @@ Notes on decisions
 
 Next steps (pickable items)
 
-The acceptance criteria are m³/s. The following recommended next steps remain to finish polish and prepare the feature for merge. These are recommendations only — they have NOT been implemented on the branch.
+The acceptance criteria are met. The following recommended next steps remain to finish polish and prepare the feature for merge. These are recommendations only — some have been implemented on the branch.
 
-1. Add compute unit tests for both modes (recommended, 30–45m)
-   - Add unit tests that assert `computeEffectiveRate` returns expected values in both simple and advanced modes.
-   - Extend `CloudHufferWeb/src/app/components/profile-manager.component.spec.ts` or add a small dedicated spec for the computation.
+1. ~~Add compute unit tests for both modes~~ (✓ DONE)
+   - Unit tests added in `CloudHufferWeb/src/app/components/profile-manager.component.spec.ts` that assert `computeEffectiveRate` returns expected values in both simple and advanced modes.
 
 2. UX validation for manual sites (small, 15–30m)
    - Add inline validation messaging or visual state (highlight) when a manual site is incomplete (missing Sig ID or reservoir). Update `probe-parser.component.html` and CSS accordingly.

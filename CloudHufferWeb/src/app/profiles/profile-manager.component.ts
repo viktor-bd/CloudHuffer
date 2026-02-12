@@ -24,8 +24,8 @@ import { Profile, CharacterProfile } from '../models/profile.models';
       <div class="profile-list">
         <label>Profiles</label>
         <select [(ngModel)]="selectedProfileId" (change)="onSelectProfile()">
-          <option [value]="null">-- None --</option>
-          <option *ngFor="let p of profiles" [value]="p.id">{{ p.name }}</option>
+          <option [ngValue]="null">-- None --</option>
+          <option *ngFor="let p of profiles" [ngValue]="p.id">{{ p.name }}</option>
         </select>
         <div class="import-export">
           <input type="file" (change)="onFileImport($event)" />
@@ -122,6 +122,7 @@ export class ProfileManagerComponent implements OnInit {
     const p = this.profileService.create(this.newProfileName.trim());
     this.newProfileName = '';
     this.profileService.setActive(p.id);
+    this.selectedProfileId = p.id;
     this.reload();
   }
 
@@ -180,7 +181,8 @@ export class ProfileManagerComponent implements OnInit {
     a.href = url;
     a.download = 'ch_profiles_export.json';
     a.click();
-    URL.revokeObjectURL(url);
+    // Defer revocation to next event loop tick to allow download to start
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   // allow exporting JSON string to clipboard as well (convenience)
