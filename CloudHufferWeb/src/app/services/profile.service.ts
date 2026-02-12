@@ -68,7 +68,11 @@ export class ProfileService {
       if (!Array.isArray(parsed)) return [];
       for (const p of parsed) {
         if (!p.id || !p.name) continue;
-        this.profiles.push(p);
+        // Skip if profile with same id already exists (avoid duplicates)
+        const exists = this.profiles.some(existing => existing.id === p.id);
+        if (!exists) {
+          this.profiles.push(p);
+        }
       }
       this.saveToStorage();
       return this.list();
@@ -107,7 +111,12 @@ export class ProfileService {
   }
 
   private saveToStorage(): void {
-    const payload = { profiles: this.profiles, activeProfileId: this.activeProfileId };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    try {
+      const payload = { profiles: this.profiles, activeProfileId: this.activeProfileId };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // localStorage.setItem can throw (quota exceeded, storage blocked)
+      // Silently ignore storage errors to avoid crashing the app
+    }
   }
 }

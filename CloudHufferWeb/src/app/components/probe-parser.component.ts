@@ -189,6 +189,11 @@ export class ProbeParserComponent implements OnInit {
     }
   }
 
+  onManualSigIdChange(): void {
+    // Recompute gas sites and ISK when Sig ID is edited
+    this.computeGasSitesAndIsk();
+  }
+
   removeManualSite(siteId: string): void {
     this.manualSites = this.manualSites.filter(s => s.id !== siteId);
     this.computeGasSitesAndIsk();
@@ -227,8 +232,8 @@ VVA-330 Cosmic Signature	Gas Site    Sizeable Perimeter Reservoir    100.0%    4
     // Parsed gas sites (exclude unscanned signatures)
     const parsedGasSites = this.filteredResults.filter(result => result.siteName !== 'Cosmic Signature');
 
-    // Manual sites mapped to ParsedSiteResult; ensure sigId is unique (use manual.id when sigId empty)
-    // Only include manual sites that have both a sigId and a selected reservoir
+    // Manual sites mapped to ParsedSiteResult; only include manual sites with both sigId and reservoir
+    // Empty sigIds are filtered out (not used as fallback to manual.id)
     const manualGasSites = this.manualSites
       .filter(manual => manual.selectedReservoir && manual.sigId && manual.sigId.trim().length > 0)
       .map(manual => ({

@@ -110,6 +110,7 @@
             <input 
               type="text" 
               [(ngModel)]="manualSite.sigId"
+              (ngModelChange)="onManualSigIdChange()"
               placeholder="ABC-123"
               class="manual-input sig-input">
           </div>
