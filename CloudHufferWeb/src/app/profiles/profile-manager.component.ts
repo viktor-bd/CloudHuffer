@@ -181,7 +181,7 @@ export class ProfileManagerComponent implements OnInit {
     a.href = url;
     a.download = 'ch_profiles_export.json';
     a.click();
-    // Delay revoke to ensure download starts
+    // Defer revocation to next event loop tick to allow download to start
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 

@@ -114,9 +114,10 @@ export class ProfileService {
     try {
       const payload = { profiles: this.profiles, activeProfileId: this.activeProfileId };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch {
+    } catch (e) {
       // localStorage.setItem can throw (quota exceeded, storage blocked)
-      // Silently ignore storage errors to avoid crashing the app
+      // Log error so users can see it in console, but don't crash the app
+      console.error('Failed to save profiles to localStorage:', e);
     }
   }
 }
